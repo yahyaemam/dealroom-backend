@@ -1,7 +1,17 @@
-import * as winston from 'winston';
+import winston from 'winston';
 
-function createLogger(opts: any = {}) {
-  const { level = 'debug', getCorrelationId, noCorrelationIdValue = 'nocorrelation' } = opts;
+interface LoggerOptions {
+  level?: string;
+  getCorrelationId: () => string | undefined;
+  noCorrelationIdValue?: string;
+}
+
+function createLogger(opts: LoggerOptions = { getCorrelationId: () => undefined }) {
+  const {
+    level = 'debug',
+    getCorrelationId,
+    noCorrelationIdValue = 'nocorrelation',
+  } = opts;
 
   return winston.createLogger({
     level,
@@ -15,22 +25,22 @@ function createLogger(opts: any = {}) {
       winston.format.colorize(),
       winston.format.printf(({ timestamp, correlationId, level, message }) => {
         return `${timestamp} (${correlationId}) - ${level}: ${message}`;
-      })
+      }),
     ),
     transports: [
       new winston.transports.Console({
-        handleExceptions: true
+        handleExceptions: true,
       }),
       new winston.transports.File({
         filename: './logs/dealroom.log',
         format: winston.format.combine(
           winston.format.errors({ stack: true }),
           winston.format.metadata()
-        )
-      })
+        ),
+      }),
     ],
-    exitOnError: false
+    exitOnError: false,
   });
 }
 
-export default createLogger;
+export { createLogger, LoggerOptions };
