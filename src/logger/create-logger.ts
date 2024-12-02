@@ -41,9 +41,6 @@ function createLogger(opts: LoggerOptions = { getCorrelationId: () => undefined 
     ],
     exitOnError: false,
   });
-
-export default createLogger;
-
 }
 
-export { createLogger, LoggerOptions };
+export default createLogger;
