@@ -1,5 +1,6 @@
 import createError from 'http-errors';
 import express from 'express';
+import cors from 'cors';
 import path from 'path';
 import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
@@ -14,6 +15,8 @@ import correlationIdMiddleware from './middlewares/express-correlation-id-mw';
 import requestLoggingMiddleware from './middlewares/request-logging-middleware';
 
 const app: express.Application = express();
+
+app.use(cors())
 
 app.use(httpLogger);
 app.use(express.json());
